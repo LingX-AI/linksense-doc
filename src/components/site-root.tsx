@@ -51,6 +51,13 @@ export function SiteRoot({
       suppressHydrationWarning
     >
       <head>
+        {/* Apply the stored theme before the body paints; the default is dark. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var t=localStorage.getItem('theme');var d=t==='light'?'light':t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):'dark';var r=document.documentElement;r.classList.remove('light','dark');r.classList.add(d);r.style.colorScheme=d}catch(err){}})()",
+          }}
+        />
         <link rel="describedby" type="text/plain" href="/llms.txt" />
       </head>
       <body>

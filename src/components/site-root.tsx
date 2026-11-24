@@ -47,7 +47,7 @@ export function SiteRoot({
   return (
     <html
       lang={homeLocales[lang as keyof typeof homeLocales] ?? 'en-US'}
-      className={`${sans.variable} ${mono.variable}`}
+      className={`${sans.variable} ${mono.variable} dark`}
       suppressHydrationWarning
     >
       <head>

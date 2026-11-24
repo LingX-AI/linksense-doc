@@ -94,6 +94,12 @@
   --default-mono-font-family: var(--font-mono);
 }
 
+/* Paint the canvas with the active theme so no white frame can appear
+   before the body styles apply during a navigation. */
+html {
+  background-color: var(--color-fd-background);
+}
+
 body {
   overscroll-behavior-y: none;
   background-color: var(--color-fd-background);

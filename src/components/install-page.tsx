@@ -13,6 +13,7 @@ import {
 import { docsPath, formatMessage, getMessages, homeLocales } from '@/lib/i18n'
 import { buttonVariants } from './ui/button'
 import { Segmented } from './ui/segmented'
+import { Footer } from './footer'
 
 export function InstallPage({ lang }: { lang: string }) {
   const t = getMessages(lang)
@@ -180,6 +181,9 @@ export function InstallPage({ lang }: { lang: string }) {
               : ''}
         </p>
       </section>
+      <div className="mt-16">
+        <Footer lang={lang} />
+      </div>
     </div>
   )
 }

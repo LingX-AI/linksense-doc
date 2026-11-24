@@ -43,9 +43,12 @@ export function Provider({
       }
       search={{ SearchDialog }}
       theme={{
-        defaultTheme: 'system',
+        defaultTheme: 'dark',
         enableSystem: true,
         enableColorScheme: true,
+        // Let the theme switch animate its thumb instead of next-themes
+        // killing every transition for a frame.
+        disableTransitionOnChange: false,
       }}
     >
       {children}

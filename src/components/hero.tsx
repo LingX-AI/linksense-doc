@@ -1,214 +1,151 @@
-'use client'
-
-import { type ReactNode, useEffect, useMemo, useState } from 'react'
-import dynamic from 'next/dynamic'
-import { useTheme } from 'next-themes'
 import Image from 'next/image'
+import {
+  ArrowUpRight,
+  BookOpen,
+  Check,
+  Cpu,
+  Layers3,
+  Puzzle,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from 'lucide-react'
 import { cn } from '@/lib/cn'
 
-const GrainGradient = dynamic(
-  () => import('@paper-design/shaders-react').then((m) => m.GrainGradient),
-  { ssr: false },
-)
+const capabilities = [
+  { label: 'Tools', Icon: Puzzle, className: 'left-[2.5%] top-[4%]' },
+  { label: 'Knowledge', Icon: BookOpen, className: 'right-[2.5%] top-[4%]' },
+  {
+    label: 'Applications',
+    Icon: Layers3,
+    className: 'left-[2.5%] bottom-[4%]',
+  },
+  { label: 'Access', Icon: ShieldCheck, className: 'right-[2.5%] bottom-[4%]' },
+]
 
-type ShaderProfile = {
-  delayMs: number
-  idleTimeoutMs: number
-  softness: number
-  intensity: number
-  noise: number
-  reduceMotion: boolean
-}
+const steps = [
+  { label: 'Read 18 threads in Gmail', src: '/connectors/gmail.png' },
+  { label: 'Matched 6 knowledge sources' },
+  { label: 'Draft saved to Google Docs', src: '/connectors/google-docs.png' },
+]
 
-const DEFAULT_SHADER_PROFILE: ShaderProfile = {
-  delayMs: 500,
-  idleTimeoutMs: 1200,
-  softness: 1,
-  intensity: 0.85,
-  noise: 0.45,
-  reduceMotion: false,
-}
-
-function detectShaderProfile(): ShaderProfile {
-  if (typeof window === 'undefined') {
-    // Must be consistent between SSR and the client's first render.
-    return DEFAULT_SHADER_PROFILE
-  }
-
-  const reduceMotion =
-    window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
-
-  const navAny = navigator as unknown as {
-    deviceMemory?: number
-    hardwareConcurrency?: number
-  }
-
-  const memory =
-    typeof navAny.deviceMemory === 'number' ? navAny.deviceMemory : 8
-  const cores =
-    typeof navAny.hardwareConcurrency === 'number'
-      ? navAny.hardwareConcurrency
-      : 8
-  const isSmallScreen =
-    window.matchMedia?.('(max-width: 1023px)')?.matches ?? false
-
-  // Always render shaders, but adapt quality to reduce jank on low-end / small screens.
-  const lowEnd = memory <= 4 || cores <= 4
-
-  if (reduceMotion) {
-    return {
-      delayMs: 350,
-      idleTimeoutMs: 1200,
-      softness: 1,
-      intensity: 0.55,
-      noise: 0.22,
-      reduceMotion: true,
-    }
-  }
-
-  if (lowEnd || isSmallScreen) {
-    return {
-      delayMs: 550,
-      idleTimeoutMs: 1600,
-      softness: 1,
-      intensity: 0.7,
-      noise: 0.28,
-      reduceMotion: false,
-    }
-  }
-
-  return {
-    delayMs: 250,
-    idleTimeoutMs: 1000,
-    softness: 1,
-    intensity: 0.9,
-    noise: 0.5,
-    reduceMotion: false,
-  }
-}
-
-export function Hero({ children }: { children: ReactNode }) {
-  const { resolvedTheme } = useTheme()
-  const [showShaders, setShowShaders] = useState(false)
-  const [logoReady, setLogoReady] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  // Avoid hydration mismatch: the first client render must match SSR output.
-  const [profile, setProfile] = useState<ShaderProfile>(DEFAULT_SHADER_PROFILE)
-
-  const shaderColors = useMemo(
-    () =>
-      resolvedTheme === 'dark'
-        ? ['#1765ED', '#1D4ED8', '#60A5FA', '#0B1F4400']
-        : ['#BFDBFE', '#93C5FD', '#DBEAFE', '#EFF6FF20'],
-    [resolvedTheme],
-  )
-
-  useEffect(() => {
-    setMounted(true)
-    setProfile(detectShaderProfile())
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
-
-    let cancelled = false
-    let idleId: number | undefined
-    const start = () => {
-      if (!cancelled) setShowShaders(true)
-    }
-
-    const win = window as unknown as {
-      requestIdleCallback?: (
-        cb: () => void,
-        options?: { timeout?: number },
-      ) => number
-      cancelIdleCallback?: (id: number) => void
-    }
-
-    // Always keep the effect, but start it after first paint/idle to minimize jank.
-    const t = window.setTimeout(() => {
-      if (cancelled) return
-      if (typeof win.requestIdleCallback === 'function') {
-        idleId = win.requestIdleCallback(start, {
-          timeout: profile.idleTimeoutMs,
-        })
-        return
-      }
-      start()
-    }, profile.delayMs)
-
-    return () => {
-      cancelled = true
-      window.clearTimeout(t)
-      if (typeof idleId === 'number') {
-        win.cancelIdleCallback?.(idleId)
-      }
-    }
-  }, [mounted, profile.delayMs, profile.idleTimeoutMs])
-
+export function Hero() {
   return (
-    <>
-      {/* CSS theme variants keep the first render consistent during hydration. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 dark:hidden"
-        style={{
-          background:
-            'radial-gradient(1200px 800px at 20% 15%, rgba(59,130,246,.18), transparent 60%), radial-gradient(1000px 700px at 70% 25%, rgba(96,165,250,.18), transparent 55%), radial-gradient(900px 700px at 55% 70%, rgba(186,230,253,.24), transparent 60%)',
-        }}
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 hidden dark:block"
-        style={{
-          background:
-            'radial-gradient(1200px 800px at 20% 15%, rgba(23,101,237,.28), transparent 60%), radial-gradient(1000px 700px at 70% 25%, rgba(29,78,216,.24), transparent 55%), radial-gradient(900px 700px at 55% 70%, rgba(96,165,250,.18), transparent 60%)',
-        }}
-      />
+    <div
+      className="ck-hero @container relative aspect-[480/368] w-full select-none overflow-hidden rounded-[20px] border-[1.5px]"
+      aria-hidden
+    >
+      <div className="ck-hero-glow absolute inset-0" />
+      <div className="ck-hero-dots absolute inset-0" />
+      <div className="ck-hero-shade absolute inset-0" />
 
-      {showShaders && (
-        <GrainGradient
-          className={cn(
-            'absolute inset-0 duration-800',
-            profile.reduceMotion ? 'animate-none' : 'animate-fd-fade-in',
-          )}
-          colors={shaderColors}
-          colorBack="#00000000"
-          softness={profile.softness}
-          intensity={profile.intensity}
-          noise={profile.noise}
-          shape="corners"
-          speed={profile.reduceMotion ? 0 : 1}
+      <svg
+        className="absolute inset-0 size-full"
+        viewBox="0 0 480 368"
+        aria-hidden
+      >
+        <circle
+          cx="240"
+          cy="184"
+          r="120"
+          className="fill-none stroke-white/25 dark:stroke-white/10"
         />
-      )}
+        <circle
+          cx="240"
+          cy="184"
+          r="162"
+          className="fill-none stroke-white/20 dark:stroke-white/10"
+        />
+        <circle
+          cx="240"
+          cy="184"
+          r="204"
+          className="fill-none stroke-white/15 dark:stroke-white/5"
+        />
+      </svg>
 
-      <div className="relative z-2 flex w-full flex-col">
-        <div className="grid items-center gap-8 px-4 pt-12 md:px-12 md:pt-24 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12">
-          <div className="flex min-w-0 flex-col max-md:items-center max-md:text-center">
-            {children}
-          </div>
-          <div className="hidden size-72 lg:block">
-            {mounted && (
-              <Image
-                src="/favicon.svg"
-                alt="LinkSense"
-                width={288}
-                height={288}
-                className={cn(
-                  'size-72 drop-shadow-2xl',
-                  logoReady
-                    ? 'duration-700 animate-in fade-in zoom-in-95'
-                    : 'invisible',
-                )}
-                onLoad={() => setLogoReady(true)}
-                priority
-                unoptimized
-              />
-            )}
-          </div>
+      {/* A workspace at work: one task moving through tools, knowledge and docs. */}
+      <div className="absolute inset-x-[11%] top-[13%] bottom-[13%] flex flex-col overflow-hidden rounded-[14px] border border-white/70 bg-white/85 shadow-[0_24px_60px_-24px_rgb(31_38_36/0.35)] backdrop-blur-md dark:border-white/10 dark:bg-[#12121b]/90 dark:shadow-[0_24px_60px_-24px_rgb(0_0_0/0.8)]">
+        <div className="flex h-9 shrink-0 items-center gap-2 border-b border-fd-border/70 px-3">
+          <Image
+            src="/favicon.svg"
+            alt=""
+            width={14}
+            height={14}
+            className="size-3.5 shrink-0"
+            unoptimized
+          />
+          <span className="text-[10.5px] font-semibold tracking-[-0.01em] text-fd-foreground">
+            LinkSense
+          </span>
+          <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-fd-border bg-fd-background/70 px-1.5 py-0.5 text-[8.5px] font-medium text-fd-muted-foreground">
+            <span className="size-1 rounded-full bg-emerald-500" />
+            Self-hosted
+          </span>
         </div>
 
+        <div className="flex min-h-0 flex-1 flex-col gap-2 px-3 py-2.5">
+          <div className="flex items-center gap-1.5 rounded-[8px] border border-fd-border bg-fd-muted/70 px-2 py-1.5">
+            <Sparkles className="size-2.5 shrink-0 text-fd-primary" />
+            <span className="truncate text-[9.5px] leading-4 text-fd-foreground/90">
+              Summarize this week&apos;s customer threads
+            </span>
+            <ArrowUpRight className="ml-auto size-2.5 shrink-0 text-fd-muted-foreground" />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            {steps.map((step) => (
+              <div
+                key={step.label}
+                className="flex items-center gap-1.5 rounded-[6px] bg-fd-background/50 px-1.5 py-1"
+              >
+                <span className="grid size-4.5 shrink-0 place-items-center rounded-[4px] border border-fd-border bg-fd-card">
+                  {step.src ? (
+                    <Image
+                      src={step.src}
+                      alt=""
+                      width={11}
+                      height={11}
+                      className="size-2.5 object-contain"
+                      unoptimized
+                    />
+                  ) : (
+                    <BookOpen className="size-2.5 text-fd-primary" />
+                  )}
+                </span>
+                <span className="truncate text-[9px] leading-4 text-fd-foreground/80">
+                  {step.label}
+                </span>
+                <Check className="ml-auto size-2.5 shrink-0 text-emerald-500" />
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-auto hidden items-center justify-between gap-2 border-t border-fd-border/60 pt-2 text-[8.5px] text-fd-muted-foreground @sm:flex">
+            <span className="inline-flex items-center gap-1 rounded-full border border-fd-border bg-fd-background/60 px-1.5 py-0.5">
+              <Cpu className="size-2.5 text-fd-primary" />
+              Your models
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Users className="size-2.5" />8 people · 2 groups
+            </span>
+          </div>
+        </div>
       </div>
-    </>
+
+      {/* Capability labels float just outside the workspace corners. */}
+      {capabilities.map(({ label, Icon, className }) => (
+        <span
+          key={label}
+          className={cn(
+            'absolute inline-flex items-center gap-1.5 rounded-full border border-white/60 bg-white/70 px-2.5 py-1 text-[9px] font-medium text-fd-foreground shadow-[0_8px_20px_-8px_rgb(31_38_36/0.35)] backdrop-blur-sm dark:border-white/10 dark:bg-white/10 dark:text-white/85',
+            className,
+          )}
+        >
+          <Icon className="size-2.5 text-fd-primary" />
+          {label}
+        </span>
+      ))}
+    </div>
   )
 }

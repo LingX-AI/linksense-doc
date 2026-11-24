@@ -28,7 +28,7 @@ export function PageActions({
   return (
     <div className="mb-6 flex flex-row flex-wrap items-center gap-2 border-b pb-6">
       <button
-        className={buttonVariants({ color: 'secondary', size: 'sm' })}
+        className={`${buttonVariants({ color: 'secondary', size: 'sm' })} rounded-lg px-3 py-1.5 text-[13px]`}
         onClick={() => void copy()}
       >
         {state === 'copied' ? (

@@ -8,4 +8,5 @@ export default withMDX({
   reactStrictMode: true,
   poweredByHeader: false,
   images: { unoptimized: true },
+  experimental: { agentUpgrade: 'security' },
 })

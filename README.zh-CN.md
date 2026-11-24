@@ -1,4 +1,4 @@
-# linksense-site
+# linksense-doc
 
 [English](README.md) | 简体中文
 
@@ -7,7 +7,7 @@ LinkSense 官网与文档站，直接采用 [QuantumNous/new-api-docs-v1](https:
 ## 技术与来源
 
 - Next.js 16.4.1、React 19.2.9、Fumadocs UI/Core 16.0.10、Fumadocs MDX 13.0.7、Tailwind CSS v4。
-- 上游首页的 GrainGradient 动效、明暗模式、导航菜单与文档布局；主题和首页渐变统一替换为 LinkSense 品牌蓝 `#1765ED`。
+- 首页与文档布局参考公开的 [CopilotKit 文档站](https://docs.copilotkit.ai/) 设计语言重做，支持明暗模式，首页使用静态插图；不再使用上游的 GrainGradient 动效。
 - 一个根项目、一个 pnpm lockfile、一个 Next 构建，统一静态输出到 `out/`。
 - 上游源码提交：`d254f1842dc3d08d60f2269e2c9d4c9876a3dfbc`。MIT 声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 和 [原始许可证](licenses/new-api-docs-v1.LICENSE)。LinkSense 自有正文与品牌不因此改用 MIT/CC0。
 

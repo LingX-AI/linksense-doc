@@ -12,8 +12,8 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { Hero } from './hero'
-import { HomeMotion } from './home-motion'
-import { ProductReel } from './product-reel'
+import { Footer } from './footer'
+import { Faq } from './faq'
 import { docsPath, getMessages, installPath } from '@/lib/i18n'
 import { demoUrl, repository } from '@/lib/product'
 import type { MessageKey } from '@/content/messages'
@@ -82,6 +82,12 @@ const paths = [
     path: 'developer-guide/interactive-application/',
     Icon: Layers3,
   },
+  {
+    title: 'pathArchitecture',
+    body: 'pathsBody',
+    path: 'deploy/architecture/',
+    Icon: ArrowUpRight,
+  },
 ] as const satisfies readonly {
   title: MessageKey
   body: MessageKey
@@ -89,272 +95,171 @@ const paths = [
   Icon: typeof Boxes
 }[]
 
+const connectors = [
+  { name: 'Google Docs', image: '/connectors/google-docs.png' },
+  { name: 'Gmail', image: '/connectors/gmail.png' },
+  { name: 'Outlook', image: '/connectors/outlook.svg' },
+  { name: 'OneDrive', image: '/connectors/onedrive.svg' },
+  { name: 'SharePoint', image: '/connectors/sharepoint.svg' },
+]
+
+const card =
+  'group flex h-full w-full items-start gap-3.5 rounded-xl border border-fd-border bg-fd-card p-5 text-sm transition-colors hover:bg-fd-accent/40 focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none'
+const cardIcon =
+  'flex size-6 shrink-0 items-center justify-center text-fd-primary'
+const cardTitle =
+  'line-clamp-1 text-base leading-6 font-semibold text-fd-foreground'
+const cardBody =
+  'line-clamp-2 text-sm leading-normal text-fd-muted-foreground'
+
 export function HomePage({ lang }: { lang: string }) {
   const t = getMessages(lang)
   return (
-    <HomeMotion lang={lang}>
+    <div className="mx-auto flex w-full max-w-[72rem] flex-col gap-16 px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <section
         aria-labelledby="home-title"
-        className="relative mx-auto flex min-h-[clamp(460px,56vh,620px)] w-full max-w-[1400px] overflow-hidden rounded-2xl border bg-origin-border text-landing-foreground"
+        className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:gap-14"
       >
-        <Hero>
-          <p
-            data-reveal-item
-            className="w-fit rounded-full border border-brand/50 p-2 text-xs font-medium text-brand"
-          >
-            {t.category}
-          </p>
+        <div className="min-w-0">
           <h1
             id="home-title"
-            className="leading-tighter my-8 text-4xl font-medium text-balance xl:mb-6 xl:text-5xl"
+            className="text-[2.5rem] leading-[1.04] font-normal tracking-[-0.03em] text-balance md:text-[3.5rem]"
           >
             {t.hero1}
             <br />
-            <span className="text-brand">{t.hero2}</span>
+            <span className="ck-gradient-text font-medium">{t.hero2}</span>
           </h1>
-          <p
-            data-reveal-copy
-            className="mb-7 max-w-2xl text-base leading-7 text-landing-foreground"
-          >
+          <p className="mt-5 max-w-[34rem] text-lg leading-[1.5] text-fd-muted-foreground">
             {t.heroBody}
           </p>
-          <div
-            data-reveal-item
-            className="flex w-fit flex-row flex-wrap items-center justify-center gap-4"
-          >
+          <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href={demoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-3 font-medium tracking-tight text-brand-foreground transition-colors hover:bg-brand-200 max-sm:text-sm"
+              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border border-transparent bg-fd-foreground px-5 text-sm font-medium text-fd-background transition-opacity hover:opacity-90"
             >
               {t.try}
-              <ArrowRight className="size-4" />
+              <ArrowRight className="size-4" aria-hidden />
             </a>
             <Link
               href={installPath(lang)}
-              className="inline-flex items-center justify-center gap-2 rounded-full border bg-fd-secondary px-5 py-3 font-medium tracking-tight text-fd-secondary-foreground transition-colors hover:bg-fd-accent max-sm:text-sm"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-fd-border bg-fd-card/60 px-4 text-sm font-medium text-fd-foreground transition-colors hover:bg-fd-accent"
             >
-              <Boxes className="size-4" />
+              <Boxes className="size-4" aria-hidden />
               {t.install}
             </Link>
             <a
               href={repository}
-              className="inline-flex items-center justify-center gap-2 rounded-full border bg-fd-secondary px-5 py-3 font-medium tracking-tight text-fd-secondary-foreground transition-colors hover:bg-fd-accent max-sm:text-sm"
+              className="hidden h-11 items-center justify-center gap-2 rounded-full px-3 text-sm font-medium text-fd-muted-foreground transition-colors hover:text-fd-foreground sm:inline-flex"
             >
-              <Github className="size-4" />
+              <Github className="size-4" aria-hidden />
               GitHub
             </a>
           </div>
-          <p className="mt-4 text-sm text-landing-foreground">{t.heroNote}</p>
-        </Hero>
-      </section>
-      <section aria-labelledby="product-tour" className="mt-12 sm:mt-16">
-        <h2 id="product-tour" className="text-2xl font-semibold tracking-tight">
-          {t.watch}
-        </h2>
-        <p
-          data-reveal-copy
-          className="mt-2 text-sm leading-6 text-fd-muted-foreground"
-        >
-          {t.heroBody}
-        </p>
-        <div data-reveal-media className="mt-7">
-          <ProductReel lang={lang} />
         </div>
+        <Hero />
       </section>
       <section
-        aria-labelledby="paths-title"
-        className="mx-auto mt-12 border-t pt-12 sm:mt-16"
-      >
-        <div className="overflow-hidden rounded-2xl border bg-fd-card lg:grid lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
-          <div className="p-7 sm:p-9 lg:p-10">
-            <h2
-              id="paths-title"
-              className="max-w-md text-2xl font-semibold tracking-tight text-balance sm:text-3xl"
-            >
-              {t.pathsTitle}
-            </h2>
-            <p
-              data-reveal-copy
-              className="mt-4 max-w-md text-sm leading-7 text-fd-muted-foreground"
-            >
-              {t.pathsBody}
-            </p>
-            <Link
-              href={docsPath(lang, 'deploy/architecture/')}
-              className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-brand underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-            >
-              {t.pathArchitecture}
-              <ArrowUpRight className="size-4" aria-hidden />
-            </Link>
-          </div>
-          <div
-            data-reveal-group
-            className="grid gap-px border-t bg-fd-border sm:grid-cols-2 lg:border-t-0 lg:border-l"
-          >
-            {paths.map(({ title, body, path, Icon }) => (
-              <Link
-                key={path}
-                href={docsPath(lang, path)}
-                className="group bg-fd-card p-6 transition-colors hover:bg-fd-accent/60 focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-brand"
-              >
-                <article className="flex h-full flex-col">
-                  <div className="flex items-center justify-between">
-                    <span className="grid size-10 place-items-center rounded-xl bg-brand/10 text-brand transition-colors group-hover:bg-brand group-hover:text-brand-foreground">
-                      <Icon className="size-5" aria-hidden />
-                    </span>
-                    <ArrowRight
-                      className="size-4 text-fd-muted-foreground/60 transition-transform group-hover:translate-x-0.5 group-hover:text-brand motion-reduce:transform-none"
-                      aria-hidden
-                    />
-                  </div>
-                  <h3 className="mt-5 font-semibold">{t[title]}</h3>
-                  <p className="mt-2 text-sm leading-6 text-fd-muted-foreground">
-                    {t[body]}
-                  </p>
-                </article>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section
-        aria-labelledby="connections-title"
-        className="mx-auto mt-16 border-t pt-12 text-center"
+        aria-labelledby="home-guides"
+        className="flex flex-col gap-5"
       >
         <h2
-          id="connections-title"
-          className="text-2xl font-semibold tracking-tight whitespace-pre-line"
+          id="home-guides"
+          className="text-2xl leading-tight font-medium tracking-[-0.03em]"
+        >
+          {t.docs}
+        </h2>
+        <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {topics.map(({ title, body, path, Icon }) => (
+            <Link key={path} href={docsPath(lang, path)} className={card}>
+              <span className={cardIcon}>
+                <Icon className="size-[22px]" aria-hidden />
+              </span>
+              <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <span className={cardTitle}>{t[title]}</span>
+                <span className={cardBody}>{t[body]}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section
+        aria-labelledby="home-paths"
+        className="flex flex-col gap-5"
+      >
+        <h2
+          id="home-paths"
+          className="text-2xl leading-tight font-medium tracking-[-0.03em]"
+        >
+          {t.pathsTitle}
+        </h2>
+        <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {paths.map(({ title, body, path, Icon }) => (
+            <Link key={path} href={docsPath(lang, path)} className={card}>
+              <span className={cardIcon}>
+                <Icon className="size-[22px]" aria-hidden />
+              </span>
+              <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <span className={cardTitle}>{t[title]}</span>
+                <span className={cardBody}>{t[body]}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section
+        aria-labelledby="home-connections"
+        className="flex flex-col gap-5"
+      >
+        <h2
+          id="home-connections"
+          className="text-2xl leading-tight font-medium tracking-[-0.03em]"
         >
           {t.connectTitle}
         </h2>
-        <p
-          data-reveal-copy
-          className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-fd-muted-foreground"
-        >
-          {t.connectBody}
-        </p>
-        <div
-          data-reveal-group
-          className="mt-8 flex flex-wrap items-center justify-center gap-6 md:gap-10"
-        >
-          {[
-            { name: 'Google Docs', image: '/connectors/google-docs.png' },
-            { name: 'Gmail', image: '/connectors/gmail.png' },
-            { name: 'Outlook', image: '/connectors/outlook.svg' },
-            { name: 'OneDrive', image: '/connectors/onedrive.svg' },
-            { name: 'SharePoint', image: '/connectors/sharepoint.svg' },
-          ].map(({ name, image }) => (
+        <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {connectors.map(({ name, image }) => (
             <div
               key={name}
-              className="flex items-center gap-3 opacity-70 grayscale-[50%] transition-all duration-300 hover:opacity-100 hover:grayscale-0"
+              className="flex h-full w-full items-center gap-3.5 rounded-xl border border-fd-border bg-fd-card p-5"
             >
               <Image
                 src={image}
                 alt=""
-                width={36}
-                height={36}
-                className="size-9 object-contain"
+                width={24}
+                height={24}
+                className="size-[22px] shrink-0 object-contain"
                 loading="lazy"
               />
-              <span className="text-sm font-medium">{name}</span>
+              <span className="text-base leading-6 font-semibold">{name}</span>
             </div>
           ))}
         </div>
       </section>
-      <section aria-labelledby="capabilities-title" className="mt-12 sm:mt-16">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2
-              id="capabilities-title"
-              className="text-2xl font-semibold tracking-tight whitespace-pre-line"
-            >
-              {t.scenesTitle}
-            </h2>
-            <p
-              data-reveal-copy
-              className="mt-2 max-w-2xl text-sm leading-6 text-fd-muted-foreground"
-            >
-              {t.channelBody}
-            </p>
-          </div>
-          <Link
-            href={docsPath(lang)}
-            className="inline-flex items-center gap-2 text-sm font-medium text-brand"
-          >
-            {t.docs}
-            <ArrowRight className="size-4" />
-          </Link>
-        </div>
-        <div
-          data-reveal-group
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {topics.map(({ title, body, path, Icon }) => (
-            <Link
-              key={path}
-              href={docsPath(lang, path)}
-              className="group rounded-2xl border bg-fd-card p-6 transition-colors hover:border-brand/50 hover:bg-brand/5"
-            >
-              <div className="flex items-center justify-between">
-                <Icon className="size-5 text-brand" aria-hidden />
-                <ArrowRight
-                  className="size-4 text-fd-muted-foreground/50 group-hover:text-brand"
-                  aria-hidden
-                />
-              </div>
-              <h3 className="mt-5 font-semibold">{t[title]}</h3>
-              <p className="mt-2 text-sm leading-6 text-fd-muted-foreground">
-                {t[body]}
-              </p>
-            </Link>
-          ))}
-        </div>
-      </section>
       <section
-        aria-labelledby="faq-title"
-        className="mx-auto mt-16 max-w-4xl border-t pt-12"
+        aria-labelledby="home-faq"
+        className="flex flex-col gap-5"
       >
         <h2
-          id="faq-title"
-          className="mb-6 text-2xl font-semibold tracking-tight"
+          id="home-faq"
+          className="text-2xl leading-tight font-medium tracking-[-0.03em]"
         >
           {t.faqTitle}
         </h2>
-        {[
-          ['faq1', 'faq1a'],
-          ['faq2', 'faq2a'],
-          ['faq3', 'faq3a'],
-          ['faq4', 'faq4a'],
-        ].map(([question, answer]) => (
-          <details key={question} className="group border-b py-5">
-            <summary className="cursor-pointer text-base font-medium">
-              {t[question as MessageKey]}
-            </summary>
-            <p className="mt-4 text-sm leading-7 text-fd-muted-foreground">
-              {t[answer as MessageKey]}
-            </p>
-          </details>
-        ))}
+        <Faq
+          items={[
+            ['faq1', 'faq1a'],
+            ['faq2', 'faq2a'],
+            ['faq3', 'faq3a'],
+            ['faq4', 'faq4a'],
+          ].map(([question, answer]) => ({
+            question: t[question as MessageKey],
+            answer: t[answer as MessageKey],
+          }))}
+        />
       </section>
-      <section className="mt-16 flex flex-wrap items-center justify-between gap-5 rounded-2xl border bg-linear-to-r from-brand/8 to-fd-background p-6 md:p-10">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight whitespace-pre-line">
-            {t.ctaTitle}
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-fd-muted-foreground">
-            {t.ownBody}
-          </p>
-        </div>
-        <Link
-          href={installPath(lang)}
-          className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 font-medium text-brand-foreground transition-colors hover:bg-brand-200"
-        >
-          {t.install}
-          <ArrowUpRight className="size-4" />
-        </Link>
-      </section>
-    </HomeMotion>
+      <Footer lang={lang} />
+    </div>
   )
 }

@@ -20,6 +20,8 @@ import { getDocsUI } from '@/content/docs-ui'
 import { pageMetadata } from '@/lib/metadata'
 import { getMDXComponents } from '@/mdx-components'
 import { PageActions } from '@/components/page-actions'
+import { AgentInstallPrompt } from '@/components/agent-install-prompt'
+import type { Edition } from '@/lib/product'
 
 export const dynamicParams = false
 
@@ -68,6 +70,11 @@ export default async function Page({
   if (!page) notFound()
   const MDX = page.data.body
   const path = withoutDocLocale(page.path).replace(/\.mdx$/, '.txt')
+  const isInstallPage =
+    slugs.length === 2 &&
+    slugs[0] === 'deploy' &&
+    (slugs[1] === 'core' || slugs[1] === 'full')
+  const installEdition = isInstallPage ? (slugs[1] as Edition) : null
   return (
     <DocsPage
       toc={page.data.toc}
@@ -75,7 +82,7 @@ export default async function Page({
       tableOfContent={{ style: 'clerk', enabled: !page.data.full }}
     >
       <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription className="mb-2">
+      <DocsDescription className="mb-2 text-base leading-6 md:text-lg md:leading-7">
         {page.data.description}
       </DocsDescription>
       {lang !== 'en' && lang !== 'zh' && (
@@ -90,6 +97,9 @@ export default async function Page({
         </p>
       )}
       <PageActions lang={lang} markdownUrl={`/markdown/${lang}/${path}`} />
+      {installEdition && (
+        <AgentInstallPrompt lang={lang} edition={installEdition} />
+      )}
       <DocsBody>
         <MDX
           components={getMDXComponents({

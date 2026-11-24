@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Github } from 'lucide-react'
 import { docsI18n, homePath, i18n } from './i18n'
 import { repository } from './product'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export const linkItems: LinkItemType[] = [
   {
@@ -19,7 +20,7 @@ export const linkItems: LinkItemType[] = [
 export function baseOptions(lang: string, docs = false): BaseLayoutProps {
   return {
     i18n: docs ? docsI18n : i18n,
-    themeSwitch: { mode: 'light-dark-system' },
+    themeSwitch: { component: <ThemeToggle /> },
     nav: {
       url: homePath(lang),
       title: (

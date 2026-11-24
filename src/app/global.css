@@ -4,9 +4,16 @@
 @plugin 'tailwindcss-animate';
 
 @theme {
-  --spacing-fd-container: 1436px;
+  --spacing-fd-container: 1600px;
+  --fd-page-width: 1160px;
 
-  /* LinkSense brand blue */
+  /* Reference surfaces: https://docs.copilotkit.ai */
+  --color-ck-frame: #ededf5;
+  --color-ck-gradient-start: #1765ed;
+  --color-ck-gradient-end: #2e8bff;
+  --color-ck-cta: #1765ed;
+
+  /* LinkSense brand */
   --color-brand: #1765ed;
   --color-brand-foreground: #ffffff;
   --color-brand-secondary: #4385f5;
@@ -17,32 +24,70 @@
   --color-fd-primary: var(--color-brand);
   --color-fd-primary-foreground: var(--color-brand-foreground);
 
-  --color-landing-foreground: #17345c;
-  --color-landing-foreground-200: #486b96;
-
-  /* System fonts */
   --font-sans:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    var(--font-plus-jakarta), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
   --font-mono:
-    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
-    monospace;
+    var(--font-spline-mono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo,
+    Consolas, 'Liberation Mono', monospace;
+}
+
+:root {
+  --color-fd-background: #ffffff;
+  --color-fd-foreground: #141021;
+  --color-fd-muted: #f4f4f8;
+  --color-fd-muted-foreground: #57575b;
+  --color-fd-popover: #ffffff;
+  --color-fd-popover-foreground: #141021;
+  --color-fd-card: #ffffff;
+  --color-fd-card-foreground: #141021;
+  --color-fd-border: #e9e9ef;
+  --color-fd-primary: #1765ed;
+  --color-fd-primary-foreground: #ffffff;
+  --color-fd-secondary: #f4f4f8;
+  --color-fd-secondary-foreground: #141021;
+  --color-fd-accent: #f0f0f4;
+  --color-fd-accent-foreground: #141021;
+  --color-fd-ring: #4385f5;
+  --color-fd-overlay: rgba(20, 16, 33, 0.2);
 }
 
 .dark {
-  --color-landing-foreground: #e6f0ff;
-  --color-landing-foreground-200: #9fbce7;
+  --color-fd-background: #0b0b10;
+  --color-fd-foreground: #f4f4f7;
+  --color-fd-muted: #1b1b25;
+  --color-fd-muted-foreground: #a3a3b0;
+  --color-fd-popover: #15151d;
+  --color-fd-popover-foreground: #f4f4f7;
+  --color-fd-card: #13131b;
+  --color-fd-card-foreground: #f4f4f7;
+  --color-fd-border: #ffffff17;
+  --color-fd-primary: #75a8ff;
+  --color-fd-primary-foreground: #071a34;
+  --color-fd-secondary: #1b1b25;
+  --color-fd-secondary-foreground: #f4f4f7;
+  --color-fd-accent: #ffffff12;
+  --color-fd-accent-foreground: #ffffff;
+  --color-fd-ring: #75a8ff;
+  --color-fd-overlay: rgba(0, 0, 0, 0.5);
 
-  /* LinkSense brand blue (dark mode) */
+  --color-ck-frame: #16161f;
+  --color-ck-gradient-start: #75a8ff;
+  --color-ck-gradient-end: #a9d1ff;
+  --color-ck-cta: #75a8ff;
+
   --color-brand: #75a8ff;
+  --color-brand-foreground: #071a34;
   --color-brand-secondary: #93baff;
   --color-brand-secondary-foreground: #071a34;
-  --color-brand-foreground: #071a34;
   --color-brand-200: #9dc0ff;
+}
 
-  /* Fumadocs UI theme color (for navigation, TOC, etc. - dark mode) */
-  --color-fd-primary: var(--color-brand);
-  --color-fd-primary-foreground: var(--color-brand-foreground);
+.dark #nd-sidebar {
+  --color-fd-muted: #ffffff10;
+  --color-fd-secondary: #ffffff14;
+  --color-fd-muted-foreground: #a3a3b0;
 }
 
 @theme inline {
@@ -52,6 +97,7 @@
 body {
   overscroll-behavior-y: none;
   background-color: var(--color-fd-background);
+  font-family: var(--font-sans);
   font-feature-settings:
     'rlig' 1,
     'calt' 1;
@@ -75,73 +121,320 @@ body {
   }
 }
 
-/* Native range semantics with a consistent player track and thumb. */
-.reel-progress {
-  appearance: none;
-  height: 24px;
+/* Gradient headline, as on the reference docs site. */
+.ck-gradient-text {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-ck-gradient-start) 7%,
+    var(--color-ck-gradient-end) 96%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hero stage, matching the reference illustration in both themes. */
+.ck-hero {
+  border-color: rgb(90 140 255 / 0.35);
+  background-color: #e6f0ff;
+  box-shadow: 0 24px 80px -32px rgb(23 101 237 / 0.3);
+}
+
+.ck-hero-glow {
+  background:
+    radial-gradient(
+      85% 70% at 72% 18%,
+      rgb(23 101 237 / 0.6),
+      transparent 62%
+    ),
+    radial-gradient(
+      70% 70% at 22% 92%,
+      rgb(67 133 245 / 0.35),
+      transparent 60%
+    ),
+    radial-gradient(
+      60% 55% at 50% 50%,
+      rgb(130 175 255 / 0.7),
+      transparent 70%
+    );
+}
+
+.ck-hero-dots {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgb(255 255 255 / 0.55) 1.4px,
+    transparent 0
+  );
+  background-size: 13px 13px;
+}
+
+.ck-hero-shade {
+  background: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.06),
+    rgb(23 101 237 / 0.12)
+  );
+}
+
+.dark .ck-hero {
+  border-color: rgb(140 180 255 / 0.25);
+  background-color: #0a0d1f;
+  box-shadow: 0 24px 80px -24px rgb(20 70 190 / 0.55);
+}
+
+.dark .ck-hero-glow {
+  background:
+    radial-gradient(
+      85% 70% at 72% 18%,
+      rgb(23 101 237 / 0.6),
+      transparent 62%
+    ),
+    radial-gradient(
+      70% 70% at 22% 92%,
+      rgb(56 132 255 / 0.28),
+      transparent 60%
+    ),
+    radial-gradient(
+      60% 55% at 50% 50%,
+      rgb(20 45 120 / 0.85),
+      transparent 70%
+    );
+}
+
+.dark .ck-hero-dots {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgb(255 255 255 / 0.16) 1.4px,
+    transparent 0
+  );
+}
+
+.dark .ck-hero-shade {
+  background: linear-gradient(
+    180deg,
+    rgb(10 13 31 / 0.1),
+    rgb(10 13 31 / 0.45)
+  );
+}
+
+/* Home navigation: slim top bar from the reference site. */
+#nd-nav {
+  border-bottom-color: var(--color-fd-border);
+  background-color: color-mix(
+    in oklab,
+    var(--color-fd-background) 88%,
+    transparent
+  );
+}
+
+#nd-nav nav {
+  height: 56px;
+  padding-inline: 1.25rem;
+}
+
+#nd-nav button[class*='bg-fd-secondary'] {
   border-radius: 999px;
-  background-size: 100% 3px;
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
+  padding-inline: 0.9rem;
 }
 
-.reel-progress::-webkit-slider-thumb {
-  appearance: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: white;
+#nd-home-layout {
+  padding-top: 56px;
+  background-color: var(--color-fd-background);
 }
 
-.reel-progress::-moz-range-thumb {
-  width: 10px;
-  height: 10px;
-  border: 0;
-  border-radius: 50%;
-  background: white;
+/* Documentation shell: flat sidebar on the frame, rounded content panel. */
+#nd-docs-layout {
+  --fd-nav-height: 56px;
+  background-color: var(--color-fd-background);
 }
 
-.reel-progress:focus-visible {
-  outline: 2px solid white;
-  outline-offset: 6px;
+#nd-subnav {
+  background-color: var(--color-ck-frame);
+  border-bottom-color: var(--color-fd-border);
 }
 
-@media (pointer: coarse) {
-  .reel-progress {
-    height: 44px;
+/* Theme switch: a single block slides between the sun and the moon. The
+   position follows the `.dark` class so it is correct before hydration. */
+[data-theme-toggle] .tt-indicator {
+  transform: translateX(0);
+}
+
+.dark [data-theme-toggle] .tt-indicator {
+  transform: translateX(1.625rem);
+}
+
+[data-theme-toggle] .tt-sun {
+  color: var(--color-fd-background);
+}
+
+[data-theme-toggle] .tt-moon {
+  color: var(--color-fd-muted-foreground);
+}
+
+.dark [data-theme-toggle] .tt-sun {
+  color: var(--color-fd-muted-foreground);
+}
+
+.dark [data-theme-toggle] .tt-moon {
+  color: var(--color-fd-background);
+}
+
+@media (min-width: 768px) {
+  #nd-docs-layout {
+    --fd-sidebar-width: 268px;
+    --fd-layout-offset: 0px;
+    height: 100dvh;
+    padding-top: 56px;
+    overflow: hidden;
+    background-color: var(--color-ck-frame);
+    margin-inline: 0;
+  }
+
+  #nd-sidebar {
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    width: 268px !important;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  #nd-sidebar > div:first-child {
+    padding: 12px 12px 4px;
+  }
+
+  #nd-sidebar > div:first-child > div:first-child {
+    display: none;
+  }
+
+  /* The fixed header already provides the theme switch and GitHub link. */
+  #nd-sidebar [data-theme-toggle],
+  #nd-sidebar a[aria-label='GitHub'] {
+    display: none;
+  }
+
+  /* Keep the language selector and llms.txt on one line. */
+  #nd-sidebar > div:last-child {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  #nd-sidebar > div:last-child > a {
+    display: inline-flex;
+    width: auto;
+  }
+
+  #nd-sidebar a {
+    border-radius: 8px;
+  }
+
+  #nd-sidebar a[data-active='true'] {
+    border-radius: 12px;
+    background-color: color-mix(
+      in oklab,
+      var(--color-fd-primary) 12%,
+      transparent
+    );
+    color: var(--color-fd-primary);
+  }
+
+  #nd-page {
+    display: grid;
+    grid-template-columns: minmax(24px, 1fr) minmax(0, 760px) minmax(24px, 1fr);
+    align-items: start;
+    width: auto;
+    max-width: none;
+    min-height: calc(100dvh - 72px);
+    margin: 8px 8px 8px 0;
+    padding: 0;
+    height: calc(100dvh - 72px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-fd-border) transparent;
+    background-color: var(--color-fd-background);
+    border: 1px solid var(--color-fd-border);
+    border-radius: 24px;
+  }
+
+  #nd-page > article {
+    grid-column: 2;
+    width: 100%;
+    max-width: 760px;
+    min-height: 0;
+    margin: 0;
+    padding: 72px 0 64px;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  #nd-page > article > h1 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  #nd-page article .prose h2 {
+    padding-bottom: 0;
+    border-bottom: 0;
+    font-size: 1.5rem;
+    line-height: 1.33;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }
 
-/* Cards use data-card="true"; heading anchors use an empty attribute. */
-[data-card='true'] {
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-  position: relative;
-  overflow: hidden;
+/* 80rem matches Tailwind's `xl`, so the TOC column appears exactly when
+   Fumadocs reveals the TOC, regardless of the browser's base font size. */
+@media (min-width: 80rem) {
+  #nd-page {
+    grid-template-columns:
+      minmax(24px, 1fr) minmax(0, 760px) 304px
+      minmax(24px, 1fr);
+  }
+
+  #nd-toc {
+    grid-column: 3;
+    position: sticky;
+    top: 0 !important;
+    align-self: flex-start;
+    width: 304px;
+    /* Match the page panel so a long TOC scrolls inside its own column
+       instead of being cut off below the viewport. */
+    height: calc(100dvh - 72px);
+    padding: 80px 0 16px 64px;
+  }
+
+  #nd-toc > div {
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  #nd-toc a[data-active='true'] {
+    border-radius: 8px;
+    background-color: transparent;
+  }
 }
 
-[data-card='true']:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border-color: var(--color-brand);
+@media (max-width: 767px) {
+  #nd-page > article > h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
 }
 
-/* Card icon container enhancement */
-[data-card='true'] > div:first-child {
-  transition: all 0.3s ease;
-}
-
-[data-card='true']:hover > div:first-child {
-  transform: scale(1.1);
-  background-color: var(--color-brand);
-  color: var(--color-brand-foreground);
-}
-
-/* Cards grid layout optimization */
-.prose
-  :where([data-card='true']):not(
-    :where([class~='not-prose'], [class~='not-prose'] *)
-  ) {
-  margin-top: 0;
-  margin-bottom: 0;
+/* The sidebar already shows the current section; keep the page top flush. */
+#nd-page > article > div:first-child[class*='items-center'] {
+  display: none;
 }

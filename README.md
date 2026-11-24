@@ -1,4 +1,4 @@
-# linksense-site
+# linksense-doc
 
 English | [简体中文](README.zh-CN.md)
 
@@ -7,7 +7,7 @@ The LinkSense website and documentation use the [QuantumNous/new-api-docs-v1](ht
 ## Technology and sources
 
 - Next.js 16.4.1, React 19.2.9, Fumadocs UI/Core 16.0.10, Fumadocs MDX 13.0.7, and Tailwind CSS v4.
-- The upstream home page's GrainGradient animation, light and dark modes, navigation menus, and documentation layout. The theme and home gradient use LinkSense brand blue `#1765ED`.
+- A home page and documentation shell restyled after the public [CopilotKit documentation](https://docs.copilotkit.ai/) design language, in light and dark modes, with a static hero illustration. The upstream GrainGradient animation is no longer used.
 - One root project, one pnpm lockfile, and one Next.js build, with static output in `out/`.
 - Upstream commit: `d254f1842dc3d08d60f2269e2c9d4c9876a3dfbc`. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the [original license](licenses/new-api-docs-v1.LICENSE) for the MIT notice. LinkSense's own text and branding are not relicensed under MIT or CC0.
 

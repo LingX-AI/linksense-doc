@@ -101,6 +101,15 @@ const documentation = new Map(
   ),
 )
 for (const [page, html] of documentation) {
+  const localePrefix = page.split('/')[2]
+  const locale =
+    Object.values(homeLocales).find((value) => value === localePrefix) ??
+    homeLocales.en
+  assert.equal(
+    html.match(/<html\b[^>]*\blang="([^"]+)"/)?.[1],
+    locale,
+    `Incorrect document language in ${page}`,
+  )
   const tocStart = html.indexOf('id="nd-toc"')
   if (tocStart !== -1) {
     const article = html.slice(html.indexOf('<article'), tocStart)

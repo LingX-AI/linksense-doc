@@ -1,7 +1,10 @@
+'use client'
+
 import type { ReactNode } from 'react'
 import localFont from 'next/font/local'
+import { useParams } from 'next/navigation'
 import { defineI18nUI } from 'fumadocs-ui/i18n'
-import { docsI18n, homeLocales, i18n } from '@/lib/i18n'
+import { docsI18n, homeLocales, i18n, resolveDocRoute } from '@/lib/i18n'
 import { languageNames } from '@/content/messages'
 import { getDocsUI } from '@/content/docs-ui'
 import { Provider } from './provider'
@@ -36,14 +39,17 @@ const mono = localFont({
 })
 
 export function SiteRoot({
-  lang,
+  lang: siteLang = 'en',
   docs = false,
   children,
 }: {
-  lang: string
+  lang?: string
   docs?: boolean
   children: ReactNode
 }) {
+  const { slug } = useParams<{ slug?: string[] }>()
+  const lang = docs ? resolveDocRoute(slug).lang : siteLang
+
   return (
     <html
       lang={homeLocales[lang as keyof typeof homeLocales] ?? 'en-US'}

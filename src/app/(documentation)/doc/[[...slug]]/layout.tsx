@@ -23,6 +23,7 @@ export default async function Layout({
         links={linkItems}
         sidebar={{
           defaultOpenLevel: 0,
+          prefetch: false,
           tabs: false,
           footer: (
             <a
